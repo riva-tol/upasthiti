@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Attendance App</title>
+        <link rel="stylesheet" href="main.css">
+        <link rel="icon" type="image/png" href="/icon.png">
+        <link rel="apple-touch-icon" href="/icon.png">
+        <link rel="manifest" href="/site.webmanifest">
+    </head>
+    <body>
+        <div id="students-page" class="page">
+            <div class="student-wheel-container" id="student-wheel-container">
+                <div class="student-wheel" id="student-wheel"></div>
+            </div>
+            <button id="add-student-btn">+ Add Student</button>
+        </div>
+
+        <div id="details-page" class="page hidden">
+            <button id="back-to-students-btn" class="back-btn">‹</button>
+            <div class="detail-header">
+                <div id="selected-student-header"></div>
+                <button id="delete-student-btn">Delete Student</button>
+            </div>
+            <div class="months-container" id="months-container"></div>
+            <div class="calendar-container" id="calendar-container">
+                <button id="back-to-months-btn" class="back-btn">‹</button>
+                <div class="calendar-header">
+                    <span class="calendar-nav" id="prev-month-btn">‹</span>
+                    <span id="month-year-label"></span>
+                    <button id="generate-report-btn" class="report-btn">View Report</button>
+                    <span class="calendar-nav" id="next-month-btn">›</span>
+                </div>
+                <div class="calendar-grid">
+                    <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+                </div>
+                <div class="calendar-grid" id="calendar-dates-grid"></div>
+            </div>
+        </div>
+
+        <div id="attendance-modal" class="modal">
+            <div class="modal-content">
+                <h3>Attendance for <span id="modal-date-label"></span></h3>
+                <div class="modal-tabs">
+                    <button id="show-add-view-btn" class="modal-tab-btn active">Add Entry</button>
+                    <button id="show-list-view-btn" class="modal-tab-btn">View Entries</button>
+                </div>
+                <div id="add-entry-view" class="modal-view">
+                    <label for="hours-input">Hours:</label>
+                    <input type="number" id="hours-input">
+                    <label for="time-range-input">Time Range:</label>
+                    <input type="text" id="time-range-input">
+                </div>
+                <div id="view-entries-view" class="modal-view hidden">
+                    <div id="daily-entries-list"></div>
+                </div>
+                <div class="modal-buttons">
+                    <button id="cancel-attendance-btn">Cancel</button>
+                    <button id="save-attendance-btn">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="report-modal" class="modal">
+            <div class="modal-content report-modal-content">
+                <span class="close-btn" id="close-report-btn">&times;</span>
+                <h3 id="report-title">Monthly Report</h3>
+                <div id="report-table-container">
+                    </div>
+                <button id="download-pdf-btn" class="report-btn">Download as PDF</button>
+            </div>
+        </div>
+
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        <script src="app.js"></script> 
+    </body>
+</html>

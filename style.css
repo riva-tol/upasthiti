@@ -1,0 +1,212 @@
+
+/* ========================================================================= */
+/* ROOT VARIABLES
+/* ========================================================================= */
+:root {
+    --beige: #f5f5dc;
+    --deep-brown: #5c4033;
+    --brown-hover: #785445;
+    --text-dark: #333;
+    --shadow-color: rgba(0, 0, 0, 0.15);
+    --error-color: #e74c3c;
+}
+
+/* ========================================================================= */
+/* GLOBAL & PAGE STYLES
+/* ========================================================================= */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    /* CORRECTED: background.png path */
+    background: #e0e0e0 url('background.png') no-repeat center center/cover;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-dark);
+}
+
+.page {
+    background: rgba(245, 245, 220, 0.9);
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+/* ========================================================================= */
+/* ANIMATIONS
+/* ========================================================================= */
+.logo,
+#login-form .input-group,
+#login-form #login-btn {
+    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.logo {
+    animation-delay: 0.1s;
+}
+
+#login-form .input-group {
+    animation-delay: 0.3s;
+}
+
+#login-form #login-btn {
+    animation-delay: 0.5s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================================================= */
+/* LOGIN FORM
+/* ========================================================================= */
+.logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+#login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.input-group {
+    position: relative;
+    width: 300px;
+}
+
+#password-input {
+    width: 100%;
+    padding: 15px 45px 15px 20px;
+    border: 1px solid #e6dc9a;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    box-sizing: border-box;
+    background-color: #e6dc9a;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#password-input:focus {
+    border-color: var(--deep-brown);
+    box-shadow: 0 0 0 3px rgba(92, 64, 51, 0.2);
+    outline: none;
+}
+
+#login-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--deep-brown);
+    color: #e6dc9a;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 200px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+#login-btn:hover {
+    background-color: var(--brown-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+#login-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+/* ========================================================================= */
+/* PASSWORD TOGGLE ICON
+/* ========================================================================= */
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-shape {
+    transition: all 0.3s ease-in-out;
+}
+
+.icon-shape.circle {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #412610;
+    border-radius: 50%;
+    opacity: 1;
+}
+
+.icon-shape.line {
+    width: 18px;
+    height: 2px;
+    background: #412610;
+    border-radius: 1px;
+    opacity: 0;
+    position: absolute;
+}
+
+.toggle-password.is-hidden .circle {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.toggle-password.is-hidden .line {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ========================================================================= */
+/* ERROR MESSAGE
+/* ========================================================================= */
+#login-error {
+    color: var(--error-color);
+    font-weight: bold;
+    font-size: 0.95rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    visibility: hidden;
+}
+
+#login-error.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* ========================================================================= */
+/* FINAL OVERRIDE FOR INPUT COLOR
+/* ========================================================================= */
+#password-input {
+    background-color: #FDFDFB !important;
+}
