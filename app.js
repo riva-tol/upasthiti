@@ -341,33 +341,8 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
  * A temporary function to test if the PDF library is working at all.
  */
+
 function downloadReportAsPDF() {
-    console.log("Starting the TEST PDF generation...");
-
-    // 1. Create a very simple element to convert
-    const testElement = document.createElement('div');
-    testElement.style.width = '8.27in';
-    testElement.style.height = '11.69in';
-    testElement.style.backgroundColor = 'lightblue'; // Use a simple color, not an image
-    testElement.style.padding = '1in';
-    testElement.style.boxSizing = 'border-box';
-    testElement.style.color = 'black';
-    testElement.innerHTML = '<h1>Testing PDF Generation</h1><p>If you can see this, the library is working correctly.</p>';
-
-    // 2. Set basic options
-    const options = {
-        margin: 0,
-        filename: 'test-document.pdf'
-    };
-
-    // 3. Try to generate a PDF from the simple element
-    html2pdf().set(options).from(testElement).save().then(() => {
-        console.log("TEST PDF generation finished.");
-    }).catch(err => {
-        console.error("PDF generation failed!", err);
-    });
-}
-/*function downloadReportAsPDF() {
     // 1. Get the original report title and table
     const originalTitle = document.getElementById('report-title');
     const originalTable = document.getElementById('report-table-container').querySelector('.report-table');
@@ -376,7 +351,7 @@ function downloadReportAsPDF() {
     if (!originalTable) {
         alert("There is no report data to download.");
         return;
-    }*/
+    }
 
     // 2. Create the hidden A4 container element
     const pdfContainer = document.createElement('div');
@@ -498,5 +473,6 @@ function downloadReportAsPDF() {
     initializeApp();
 
 });
+
 
 
