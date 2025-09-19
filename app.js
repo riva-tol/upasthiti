@@ -334,67 +334,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /** Downloads the content of the report modal as a styled PDF. */
-    /**
- * Builds a custom A4 layout and downloads the report as a styled PDF.
- */
-
-    /**
- * A temporary function to test if the PDF library is working at all.
- */
-
-function downloadReportAsPDF() {
-    // 1. Get the original report title and table
-    const originalTitle = document.getElementById('report-title');
-    const originalTable = document.getElementById('report-table-container').querySelector('.report-table');
-
-    // Stop if there's no table to download
-    if (!originalTable) {
-        alert("There is no report data to download.");
-        return;
+    function downloadReportAsPDF() {
+        const reportContent = document.querySelector('.report-modal-content');
+        const studentName = students[currentStudentIndex].name.replace(' ', '_');
+        const monthName = currentDate.toLocaleString('default', { month: 'long' });
+        const year = currentDate.getFullYear();
+        const fileName = `Report_${studentName}_${monthName}_${year}.pdf`;
+        const options = { margin: 0.5, filename: fileName, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+        html2pdf().set(options).from(reportContent).save();
     }
-
-    // 2. Create the hidden A4 container element
-    const pdfContainer = document.createElement('div');
-    pdfContainer.className = 'pdf-container';
-
-    // 3. Create the content wrapper
-    const pdfContent = document.createElement('div');
-    pdfContent.className = 'pdf-content';
-
-    // 4. Clone the title and table to put them in our new container
-    const titleClone = originalTitle.cloneNode(true);
-    const tableClone = originalTable.cloneNode(true);
-    
-    // Add the cloned elements to our content wrapper
-    pdfContent.appendChild(titleClone);
-    pdfContent.appendChild(tableClone);
-    
-    // Add the content wrapper to the A4 page container
-    pdfContainer.appendChild(pdfContent);
-    
-    // 5. Temporarily add the A4 container to the page (off-screen)
-    document.body.appendChild(pdfContainer);
-
-    // 6. Set up PDF generation options
-    const studentName = students[currentStudentIndex].name.replace(' ', '_');
-    const monthName = currentDate.toLocaleString('default', { month: 'long' });
-    const year = currentDate.getFullYear();
-    const fileName = `Report_${studentName}_${monthName}_${year}.pdf`;
-
-    const options = {
-        margin:       0, // No margin as our container handles spacing
-        filename:     fileName,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-    };
-
-    // 7. Generate the PDF from our hidden container, then remove the container
-    html2pdf().set(options).from(pdfContainer).save().then(() => {
-        // This runs after the PDF is saved
-        document.body.removeChild(pdfContainer); // Clean up the temporary element
-    });
-}
 
     // =========================================================================
     // 7. EVENT LISTENERS
@@ -473,6 +421,3 @@ function downloadReportAsPDF() {
     initializeApp();
 
 });
-
-
-
