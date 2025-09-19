@@ -360,7 +360,7 @@ body {
     height: 11.69in; /* A4 height */
 
     /* Applies your background image */
-    background: #e0e0e0 url('background.png') no-repeat center center;
+    background: #e0e0e0 url('/background.png') no-repeat center center;
     background-size: cover;
 
     /* Centers the content inside */
@@ -386,6 +386,7 @@ body {
     font-size: 1.8rem;
     margin-top: 0;
 }
+
 
 
 
