@@ -256,7 +256,7 @@ body {
     z-index: 1000;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 150%;
     height: 100%;
     background-color: rgba(92, 64, 51, 0.6);
     justify-content: center;
@@ -280,7 +280,7 @@ body {
 .modal-tab-btn.active { color: var(--text-dark); border-bottom-color: var(--burgundy); }
 .modal-view { display: flex; flex-direction: column; gap: 10px; padding: 10px 0; }
 .modal-view.hidden { display: none; }
-#daily-entries-list { max-height: 150px; overflow-y: auto; }
+#daily-entries-list { max-height: 250px; overflow-y: auto; }
 #daily-entries-list > div {
     /* ... */
     border-bottom: 1px solid var(--light-tan); /* Light tan separator */
@@ -403,6 +403,7 @@ body {
         width: 90%;
     }
 }
+
 
 
 
