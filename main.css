@@ -299,19 +299,55 @@ body {
 /* Styles for Report Button & Modal */
 .report-btn { background-color: var(--deep-brown); color: var(--text-light); border: none; border-radius: 8px; padding: 5px 12px; font-size: 0.8rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
 .report-btn:hover { background-color: #3d2b22; }
-.report-modal-content { width: 450px; max-width: 90%; }
-.close-btn { position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; color: #aaa; cursor: pointer; }
-.close-btn:hover { color: #333; }
-#report-table-container { max-height: 60vh; overflow-y: auto; width: 100%; }
-.report-table { width: 100%; border-collapse: collapse; font-size: 1rem; }
-.report-table th, .report-table td {
-    border: 1px solid var(--light-tan); /* Light tan border */
-    /* ... */
+
+/* ========================================================================= */
+/* 7. REPORT MODAL STYLES (NEW)
+/* ========================================================================= */
+#report-modal .modal-content {
+    width: 500px;
+    max-width: 90%;
 }
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.close-btn:hover {
+    color: var(--deep-brown);
+}
+
+#report-table-container {
+    max-height: 60vh;
+    overflow-y: auto;
+    width: 100%;
+    border: 1px solid var(--light-tan);
+    border-radius: 8px;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.report-table th, .report-table td {
+    border: 1px solid var(--light-tan);
+    padding: 10px;
+    text-align: left;
+}
+
 .report-table th {
     background-color: var(--light-tan); /* Light tan header */
-    /* ... */
+    position: sticky;
+    top: 0;
 }
+
 .report-table tfoot {
     font-weight: bold;
     background-color: var(--light-tan); /* Light tan footer */
@@ -367,6 +403,7 @@ body {
         width: 90%;
     }
 }
+
 
 
 
