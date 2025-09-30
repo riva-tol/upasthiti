@@ -12,6 +12,8 @@
     --text-light: #f0f0f0;
     --shadow-color: rgba(0, 0, 0, 0.1);
     --danger-red: #c0392b;
+    --creme-bg: #f5f5dc;
+    --light-tan: #e0dace;
 }
 
 /* ========================================================================= */
@@ -256,14 +258,14 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(92, 64, 51, 0.6);
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
     position: relative;
-    background-color: var(--pastel-red);
+    background-color: var(--creme-bg);
     padding: 20px;
     border-radius: 20px;
     display: flex;
@@ -279,8 +281,15 @@ body {
 .modal-view { display: flex; flex-direction: column; gap: 10px; padding: 10px 0; }
 .modal-view.hidden { display: none; }
 #daily-entries-list { max-height: 150px; overflow-y: auto; }
-#daily-entries-list > div { display: flex; justify-content: space-between; align-items: center; margin: 5px 0; padding: 5px; border-bottom: 1px solid rgba(95, 6, 6, 0.05); }
-.modal-content input { padding: 10px; border-radius: 10px; border: 1px solid #e1d9d9; font-size: 1rem; }
+#daily-entries-list > div {
+    /* ... */
+    border-bottom: 1px solid var(--light-tan); /* Light tan separator */
+}
+.modal-content input {
+    /* ... */
+    border: 1px solid var(--light-tan); /* Light tan border */
+    /* ... */
+}
 .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
 .modal-buttons button { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; }
 #save-attendance-btn { background-color: var(--burgundy); color: var(--text-light); font-weight: bold; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); }
@@ -295,10 +304,18 @@ body {
 .close-btn:hover { color: #333; }
 #report-table-container { max-height: 60vh; overflow-y: auto; width: 100%; }
 .report-table { width: 100%; border-collapse: collapse; font-size: 1rem; }
-.report-table th, .report-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-.report-table th { background-color: #f2f2f2; position: sticky; top: 0; }
-.report-table tfoot { font-weight: bold; background-color: #f2f2f2; }
-
+.report-table th, .report-table td {
+    border: 1px solid var(--light-tan); /* Light tan border */
+    /* ... */
+}
+.report-table th {
+    background-color: var(--light-tan); /* Light tan header */
+    /* ... */
+}
+.report-table tfoot {
+    font-weight: bold;
+    background-color: var(--light-tan); /* Light tan footer */
+}
 /* ========================================================================= */
 /* 6. MOBILE RESPONSIVE STYLES
 /* ========================================================================= */
@@ -350,5 +367,6 @@ body {
         width: 90%;
     }
 }
+
 
 
