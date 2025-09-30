@@ -41,6 +41,10 @@ body {
     top: 0;
     left: 0;
     transition: opacity 0.3s ease;
+
+     /* --- BACKGROUND STYLES MOVED HERE & FIXED --- */
+    background: #e0e0e0 url('background.png') no-repeat center center;
+    background-size: cover;
 }
 
 .page.hidden {
@@ -346,4 +350,5 @@ body {
         width: 90%;
     }
 }
+
 
