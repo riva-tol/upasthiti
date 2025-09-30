@@ -267,11 +267,11 @@ body {
     position: relative;
     background-color: var(--creme-bg);
     padding: 20px;
-    border-radius: 20px;
+    border-radius: 40px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    width: 350px;
+    gap: 29px;
+    width: 450px;
     border: 1px solid rgba(255,255,255,0.3);
 }
 
@@ -403,6 +403,7 @@ body {
         width: 90%;
     }
 }
+
 
 
 
