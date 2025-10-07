@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. DOM ELEMENT SELECTORS
     // =========================================================================
 
-    // --- Main App Selectors ---
     const addStudentBtn = document.getElementById('add-student-btn');
     const studentsPage = document.getElementById('students-page');
     const detailsPage = document.getElementById('details-page');
@@ -49,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteStudentBtn = document.getElementById('delete-student-btn');
     const backToStudentsBtn = document.getElementById('back-to-students-btn');
 
-    // --- Calendar & Months Selectors ---
     const monthsContainer = document.getElementById('months-container');
     const calendarContainer = document.getElementById('calendar-container');
     const monthYearLabel = document.getElementById('month-year-label');
@@ -58,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevMonthBtn = document.getElementById('prev-month-btn');
     const nextMonthBtn = document.getElementById('next-month-btn');
     
-    // --- Attendance Modal Selectors ---
     const attendanceModal = document.getElementById('attendance-modal');
     const modalDateLabel = document.getElementById('modal-date-label');
     const showAddViewBtn = document.getElementById('show-add-view-btn');
@@ -71,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveAttendanceBtn = document.getElementById('save-attendance-btn');
     const cancelAttendanceBtn = document.getElementById('cancel-attendance-btn');
     
-    // --- Report & PDF Selectors ---
     const generateReportBtn = document.getElementById('generate-report-btn');
     const reportModal = document.getElementById('report-modal');
     const closeReportBtn = document.getElementById('close-report-btn');
@@ -83,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. HELPER & UTILITY FUNCTIONS
     // =========================================================================
 
-    /** Returns the ordinal suffix for a day number (e.g., 1st, 2nd, 3rd). */
     function getOrdinalSuffix(day) {
         if (day > 3 && day < 21) return 'th';
         switch (day % 10) {
@@ -94,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /** Checks if a hex color is dark to determine if text should be light or dark. */
     function isColorDark(hexColor) {
         const rgb = parseInt(hexColor.substring(1), 16);
         const r = (rgb >> 16) & 0xff;
@@ -103,12 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return (0.2126 * r + 0.7152 * g + 0.0722 * b) < 128;
     }
 
-    /** Saves the current 'students' array to the Firebase Realtime Database. */
     function saveData() {
         studentsRef.set(students).catch(error => console.error("Firebase write failed: ", error));
     }
 
-    /** Hides all pages and shows the specified page. */
     function showPage(pageToShow) {
         [studentsPage, detailsPage].forEach(page => page.classList.toggle('hidden', page !== pageToShow));
     }
@@ -117,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. CORE APP FUNCTIONS
     // =========================================================================
 
-    /** Applies a simple scaling animation to student tabs on scroll. */
     function updateWheelAnimation() {
         const containerCenter = studentWheelContainer.offsetWidth / 2;
         const scrollLeft = studentWheelContainer.scrollLeft;
@@ -130,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /** Renders the student tabs in the main wheel view. */
     function renderStudentTabs() {
         studentWheel.innerHTML = '';
         if (!students) return;
@@ -150,31 +140,18 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(updateWheelAnimation, 0);
     }
 
-    /** Handles the click event on a student tab, animating it and showing the details page. */
     function handleStudentTabClick(event) {
         currentStudentIndex = parseInt(event.currentTarget.dataset.index);
         currentDate = new Date();
         const clickedTab = event.currentTarget;
-        const startRect = clickedTab.getBoundingClientRect();
-        const movingTab = clickedTab.cloneNode(true);
-        movingTab.style.color = clickedTab.style.color;
         selectedStudentHeader.innerHTML = '';
-        selectedStudentHeader.appendChild(movingTab);
-        const endRect = movingTab.getBoundingClientRect();
-        const dx = startRect.left - endRect.left;
-        const dy = startRect.top - endRect.top;
-        movingTab.style.transform = `translate(${dx}px, ${dy}px)`;
-        requestAnimationFrame(() => {
-            movingTab.style.transition = 'transform 0.5s ease-in-out';
-            movingTab.style.transform = 'translate(0, 0)';
-        });
+        selectedStudentHeader.appendChild(clickedTab.cloneNode(true));
         populateMonths();
         showPage(detailsPage);
         calendarContainer.style.display = 'none';
         monthsContainer.style.display = 'grid';
     }
 
-    /** Populates the months view with buttons for each month of the current year. */
     function populateMonths() {
         monthsContainer.innerHTML = '';
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -204,14 +181,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /** Hides the months view and shows the calendar view. */
     function showCalendar() {
         monthsContainer.style.display = 'none';
         calendarContainer.style.display = 'flex';
         renderCalendar();
     }
 
-    /** Renders the calendar grid for the currently selected month and year. */
     function renderCalendar() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
@@ -219,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         calendarDatesGrid.innerHTML = '';
         const firstDayOfMonth = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-        for (let i = 0; i < firstDayOfMonth; i++) { calendarDatesGrid.appendChild(document.createElement('div')); }
+        for (let i = 0; i < firstDayOfMonth; i++) calendarDatesGrid.appendChild(document.createElement('div'));
         for (let day = 1; day <= daysInMonth; day++) {
             const dateSquare = document.createElement('div');
             dateSquare.className = 'date-square';
@@ -241,11 +216,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /** Opens the attendance modal for a specific date. */
+    // =========================================================================
+    // 6. ATTENDANCE MODAL
+    // =========================================================================
+
     function openAttendanceModal(dateStr) {
         clickedDateStr = dateStr;
         const date = new Date(dateStr + 'T00:00:00');
         modalDateLabel.innerHTML = `${date.getDate()}<sup>${getOrdinalSuffix(date.getDate())}</sup> ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+
         dailyEntriesList.innerHTML = '';
         const entries = students[currentStudentIndex]?.attendance?.[dateStr];
         if (entries?.length > 0) {
@@ -253,12 +232,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const entryContainer = document.createElement('div');
                 entryContainer.className = 'attendance-entry';
                 entryContainer.innerHTML = `<span><strong>${entry.hours} hours</strong> (${entry.timeRange || 'No time given'})</span>`;
-
                 const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = "DELETE";
                 deleteBtn.className = "delete-btn";
-
-
                 deleteBtn.addEventListener('click', () => deleteEntry(dateStr, index));
                 entryContainer.appendChild(deleteBtn);
                 dailyEntriesList.appendChild(entryContainer);
@@ -268,42 +244,37 @@ document.addEventListener('DOMContentLoaded', () => {
             dailyEntriesList.innerHTML = '<p>No entries for this date.</p>';
             showAddViewBtn.click();
         }
+
         hoursInput.value = '';
         timeRangeInput.value = '';
-        attendanceModal.style.display = 'flex';
+        attendanceModal.classList.add('show'); // ✅ show modal
     }
 
-    /** Deletes a specific attendance entry for a student on a given date. */
     function deleteEntry(dateStr, entryIndex) {
         const entries = students[currentStudentIndex].attendance[dateStr];
         entries.splice(entryIndex, 1);
-        if (entries.length === 0) {
-            delete students[currentStudentIndex].attendance[dateStr];
-        }
+        if (entries.length === 0) delete students[currentStudentIndex].attendance[dateStr];
         saveData();
         renderCalendar();
         populateMonths();
         openAttendanceModal(dateStr);
     }
 
-    /** Closes the attendance modal. */
     function closeAttendanceModal() {
-        attendanceModal.style.display = 'none';
+        attendanceModal.classList.remove('show'); // ✅ hide modal
     }
 
-    /** Handles the 'Enter' key press on modal inputs to save the entry. */
     function handleEnterKey(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
             saveAttendanceBtn.click();
         }
     }
-    
+
     // =========================================================================
-    // 6. REPORTING & PDF FUNCTIONS
+    // 7. REPORT MODAL
     // =========================================================================
 
-    /** Collects all attendance for the current month and displays it in a table. */
     function generateMonthlyReport() {
         if (currentStudentIndex === null) return;
         const student = students[currentStudentIndex];
@@ -311,33 +282,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const month = currentDate.getMonth();
         const monthName = currentDate.toLocaleString('default', { month: 'long' });
         reportTitle.textContent = `Report for ${student.name} - ${monthName} ${year}`;
+
         const reportEntries = [];
         let totalHours = 0;
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         for (let day = 1; day <= daysInMonth; day++) {
-            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dateStr = `${year}-${String(month + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
             if (student.attendance && student.attendance[dateStr]) {
                 student.attendance[dateStr].forEach(entry => {
-                    const formattedDate = `${day}/${month + 1}/${year}`;
-                    reportEntries.push({ date: formattedDate, hours: parseFloat(entry.hours), time: entry.timeRange || 'N/A' });
+                    reportEntries.push({
+                        date: `${day}/${month + 1}/${year}`,
+                        hours: parseFloat(entry.hours),
+                        time: entry.timeRange || 'N/A'
+                    });
                     totalHours += parseFloat(entry.hours);
                 });
             }
         }
-        if (reportEntries.length === 0) {
-            reportTableContainer.innerHTML = '<p>No attendance entries for this month.</p>';
-        } else {
+
+        if (reportEntries.length === 0) reportTableContainer.innerHTML = '<p>No attendance entries for this month.</p>';
+        else {
             let tableHTML = `<table class="report-table"><thead><tr><th>Date</th><th>Hours</th><th>Time</th></tr></thead><tbody>`;
             reportEntries.forEach(entry => {
                 tableHTML += `<tr><td>${entry.date}</td><td>${entry.hours}</td><td>${entry.time}</td></tr>`;
             });
-            tableHTML += `</tbody><tfoot><tr><td><strong>Total</strong></td><td><strong>${totalHours}</strong></td><td></td></tr></tfoot></table>`;
+            tableHTML += `<tfoot><tr><td><strong>Total</strong></td><td><strong>${totalHours}</strong></td><td></td></tr></tfoot></table>`;
             reportTableContainer.innerHTML = tableHTML;
         }
-        reportModal.style.display = 'flex';
+
+        reportModal.classList.add('show'); // ✅ show modal
     }
 
-    /** Downloads the content of the report modal as a styled PDF. */
     function downloadReportAsPDF() {
         const reportContent = document.querySelector('.report-modal-content');
         const studentName = students[currentStudentIndex].name.replace(' ', '_');
@@ -349,14 +324,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // 7. EVENT LISTENERS
+    // 8. EVENT LISTENERS
     // =========================================================================
 
-    addStudentBtn.addEventListener('click', () => {
+        addStudentBtn.addEventListener('click', () => {
         const newName = prompt("Enter the new student's name:");
         if (newName && newName.trim()) {
             students.push({ name: newName.trim(), attendance: {} });
             saveData();
+            renderStudentTabs();
         }
     });
 
@@ -367,29 +343,63 @@ document.addEventListener('DOMContentLoaded', () => {
             students.splice(currentStudentIndex, 1);
             saveData();
             showPage(studentsPage);
+            renderStudentTabs();
         }
     });
 
     studentWheelContainer.addEventListener('scroll', updateWheelAnimation);
+
     backToStudentsBtn.addEventListener('click', () => showPage(studentsPage));
     selectedStudentHeader.addEventListener('click', () => showPage(studentsPage));
-    backToMonthsBtn.addEventListener('click', () => { monthsContainer.style.display = 'grid'; calendarContainer.style.display = 'none'; });
-    prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
-    nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
-    
-    // --- Attendance Modal Listeners ---
-    showAddViewBtn.addEventListener('click', () => { addEntryView.classList.remove('hidden'); viewEntriesView.classList.add('hidden'); showAddViewBtn.classList.add('active'); showListViewBtn.classList.remove('active'); saveAttendanceBtn.style.display = 'inline-block'; });
-    showListViewBtn.addEventListener('click', () => { addEntryView.classList.add('hidden'); viewEntriesView.classList.remove('hidden'); showAddViewBtn.classList.remove('active'); showListViewBtn.classList.add('active'); saveAttendanceBtn.style.display = 'none'; });
+
+    backToMonthsBtn.addEventListener('click', () => {
+        monthsContainer.style.display = 'grid';
+        calendarContainer.style.display = 'none';
+    });
+
+    prevMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+    });
+
+    // --- Attendance Modal ---
+    showAddViewBtn.addEventListener('click', () => {
+        addEntryView.classList.remove('hidden');
+        viewEntriesView.classList.add('hidden');
+        showAddViewBtn.classList.add('active');
+        showListViewBtn.classList.remove('active');
+        saveAttendanceBtn.style.display = 'inline-block';
+    });
+
+    showListViewBtn.addEventListener('click', () => {
+        addEntryView.classList.add('hidden');
+        viewEntriesView.classList.remove('hidden');
+        showAddViewBtn.classList.remove('active');
+        showListViewBtn.classList.add('active');
+        saveAttendanceBtn.style.display = 'none';
+    });
+
     cancelAttendanceBtn.addEventListener('click', closeAttendanceModal);
-    attendanceModal.addEventListener('click', (event) => { if (event.target === attendanceModal) { closeAttendanceModal(); } });
-    
+
+    attendanceModal.addEventListener('click', (event) => {
+        if (event.target === attendanceModal) closeAttendanceModal();
+    });
+
     saveAttendanceBtn.addEventListener('click', () => {
         const hours = hoursInput.value;
         const timeRange = timeRangeInput.value;
-        if (!hours || isNaN(hours)) { alert("Please enter a valid number for hours."); return; }
-        if (!students[currentStudentIndex].attendance) { students[currentStudentIndex].attendance = {}; }
+        if (!hours || isNaN(hours)) {
+            alert("Please enter a valid number for hours.");
+            return;
+        }
+        if (!students[currentStudentIndex].attendance) students[currentStudentIndex].attendance = {};
         const studentData = students[currentStudentIndex].attendance;
-        if (!studentData[clickedDateStr]) { studentData[clickedDateStr] = []; }
+        if (!studentData[clickedDateStr]) studentData[clickedDateStr] = [];
         studentData[clickedDateStr].push({ hours: parseFloat(hours), timeRange });
         saveData();
         closeAttendanceModal();
@@ -399,18 +409,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     hoursInput.addEventListener('keydown', handleEnterKey);
     timeRangeInput.addEventListener('keydown', handleEnterKey);
-    
-    // --- Report Modal Listeners ---
+
+    // --- Report Modal ---
     generateReportBtn.addEventListener('click', generateMonthlyReport);
-    closeReportBtn.addEventListener('click', () => { reportModal.style.display = 'none'; });
-    reportModal.addEventListener('click', (event) => { if (event.target === reportModal) { reportModal.style.display = 'none'; } });
+    closeReportBtn.addEventListener('click', () => reportModal.classList.remove('show'));
+    reportModal.addEventListener('click', (event) => {
+        if (event.target === reportModal) reportModal.classList.remove('show');
+    });
     downloadPdfBtn.addEventListener('click', downloadReportAsPDF);
 
     // =========================================================================
-    // 8. APP INITIALIZATION
+    // 9. APP INITIALIZATION
     // =========================================================================
 
-    /** Fetches initial data from Firebase and starts the app. */
     function initializeApp() {
         studentsRef.on('value', (snapshot) => {
             const data = snapshot.val();
