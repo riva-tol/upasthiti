@@ -248,25 +248,23 @@ body {
 /* ========================================================================= */
 /* Hide all modals by default */
 .modal {
-    display: none;        /* hidden initially */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
-    justify-content: center;
+    display: none; /* hide by default */
     align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.4);
     z-index: 1000;
     padding: 16px;
     box-sizing: border-box;
     backdrop-filter: blur(6px);
 }
 
-/* Show modal when JS adds .show class or sets display:flex */
 .modal.show {
-    display: flex;
+    display: flex; /* show modal when .show is added */
 }
+
 
 .modal-content {
   background: #fffaf7;
@@ -541,3 +539,4 @@ body {
         width: 90%;
     }
 }
+
