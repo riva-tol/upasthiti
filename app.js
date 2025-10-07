@@ -221,34 +221,39 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
 
     function openAttendanceModal(dateStr) {
-        clickedDateStr = dateStr;
-        const date = new Date(dateStr + 'T00:00:00');
-        modalDateLabel.innerHTML = `${date.getDate()}<sup>${getOrdinalSuffix(date.getDate())}</sup> ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+    clickedDateStr = dateStr;
+    const date = new Date(dateStr + 'T00:00:00');
+    modalDateLabel.innerHTML = `${date.getDate()}<sup>${getOrdinalSuffix(date.getDate())}</sup> ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
 
-        dailyEntriesList.innerHTML = '';
-        const entries = students[currentStudentIndex]?.attendance?.[dateStr];
-        if (entries?.length > 0) {
-            entries.forEach((entry, index) => {
-                const entryContainer = document.createElement('div');
-                entryContainer.className = 'attendance-entry';
-                entryContainer.innerHTML = `<span><strong>${entry.hours} hours</strong> (${entry.timeRange || 'No time given'})</span>`;
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = "DELETE";
-                deleteBtn.className = "delete-btn";
-                deleteBtn.addEventListener('click', () => deleteEntry(dateStr, index));
-                entryContainer.appendChild(deleteBtn);
-                dailyEntriesList.appendChild(entryContainer);
-            });
-            showListViewBtn.click();
-        } else {
-            dailyEntriesList.innerHTML = '<p>No entries for this date.</p>';
-            showAddViewBtn.click();
-        }
+    dailyEntriesList.innerHTML = '';
+    const entries = students[currentStudentIndex]?.attendance?.[dateStr];
+    if (entries?.length > 0) {
+        entries.forEach((entry, index) => {
+            const entryContainer = document.createElement('div');
+            entryContainer.className = 'attendance-entry';
+            entryContainer.innerHTML = `<span><strong>${entry.hours} hours</strong> (${entry.timeRange || 'No time given'})</span>`;
 
-        hoursInput.value = '';
-        timeRangeInput.value = '';
-        attendanceModal.classList.add('show'); // ✅ show modal
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = "DELETE";
+            deleteBtn.className = "delete-btn";
+            deleteBtn.addEventListener('click', () => deleteEntry(dateStr, index));
+
+            entryContainer.appendChild(deleteBtn);
+            dailyEntriesList.appendChild(entryContainer);
+        });
+        showListViewBtn.click();
+    } else {
+        dailyEntriesList.innerHTML = '<p>No entries for this date.</p>';
+        showAddViewBtn.click();
     }
+
+    hoursInput.value = '';
+    timeRangeInput.value = '';
+
+    // ✅ Use class instead of inline display for mobile compatibility
+    attendanceModal.classList.add('show');
+}
+
 
     function deleteEntry(dateStr, entryIndex) {
         const entries = students[currentStudentIndex].attendance[dateStr];
@@ -260,9 +265,10 @@ document.addEventListener('DOMContentLoaded', () => {
         openAttendanceModal(dateStr);
     }
 
-    function closeAttendanceModal() {
-        attendanceModal.classList.remove('show'); // ✅ hide modal
-    }
+   function closeAttendanceModal() {
+    attendanceModal.classList.remove('show');
+}
+
 
     function handleEnterKey(event) {
         if (event.key === 'Enter') {
@@ -436,3 +442,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
 
 });
+
