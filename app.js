@@ -251,10 +251,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (entries?.length > 0) {
             entries.forEach((entry, index) => {
                 const entryContainer = document.createElement('div');
+                entryContainer.className = 'attendance-entry';
                 entryContainer.innerHTML = `<span><strong>${entry.hours} hours</strong> (${entry.timeRange || 'No time given'})</span>`;
+
                 const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'delete-entry-btn';
-                deleteBtn.textContent = 'X';
+                deleteBtn.textContent = "DELETE";
+                deleteBtn.className = "delete-btn";
+
+
                 deleteBtn.addEventListener('click', () => deleteEntry(dateStr, index));
                 entryContainer.appendChild(deleteBtn);
                 dailyEntriesList.appendChild(entryContainer);
