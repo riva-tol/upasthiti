@@ -63,14 +63,22 @@
         </div>
 
         <div id="report-modal" class="modal">
-            <div class="modal-content report-modal-content">
-                <span class="close-btn" id="close-report-btn">&times;</span>
-                <h3 id="report-title">Monthly Report</h3>
-                <div id="report-table-container">
-                    </div>
-                <button id="download-pdf-btn" class="report-btn">Download as PDF</button>
-            </div>
-        </div>
+    <div class="modal-content report-modal-content">
+        <span class="close-btn" id="close-report-btn">&times;</span>
+        <h3 id="report-title">Monthly Report</h3>
+        <div id="report-table-container"></div>
+        <button id="download-pdf-btn" class="report-btn">Download as PDF</button>
+    </div>
+</div>
+
+<!-- Hidden wrapper for PDF generation -->
+<div id="pdf-wrapper" style="display:none;">
+    <div id="pdf-content">
+        <div id="pdf-background"></div>
+        <div id="pdf-table-container"></div>
+    </div>
+</div>
+
 
         <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
