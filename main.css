@@ -248,23 +248,25 @@ body {
 /* ========================================================================= */
 /* Hide all modals by default */
 .modal {
-    display: none; /* hide by default */
-    align-items: center;
-    justify-content: center;
+    display: none;        /* hidden initially */
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.4);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
     z-index: 1000;
     padding: 16px;
     box-sizing: border-box;
     backdrop-filter: blur(6px);
 }
 
+/* Show modal when JS adds .show class or sets display:flex */
 .modal.show {
-    display: flex; /* show modal when .show is added */
+    display: flex;
 }
-
 
 .modal-content {
   background: #fffaf7;
@@ -437,10 +439,43 @@ body {
 /* ========================================================================= */
 /* 7. REPORT MODAL STYLES (NEW)
 /* ========================================================================= */
-#report-modal .modal-content {
-    width: 500px;
-    max-width: 90%;
+
+
+.report-modal-content {
+    position: relative;          /* needed for overlay */
+    width: 100%;
+    max-width: 600px;            /* responsive width */
+    max-height: 85vh;            /* prevent overflow */
+    margin: auto;                /* horizontal centering */
+    padding: 30px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;     /* vertical centering */
+    align-items: center;         /* horizontal centering */
+    text-align: center;
+    background: #fffaf7;         /* fallback color */
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+    color: #2c2c2c;              /* default text color */
+    overflow: hidden;            /* prevent overlay overflow */
 }
+
+/* Optional overlay to improve text readability on busy backgrounds */
+.report-modal-content::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255, 255, 255, 0.6); /* semi-transparent overlay */
+    border-radius: 20px;
+    z-index: 0;
+}
+
+/* Ensure all child elements are above overlay */
+.report-modal-content > * {
+    position: relative;
+    z-index: 1;
+}
+
 
 .close-btn {
     position: absolute;
@@ -540,3 +575,38 @@ body {
     }
 }
 
+#pdf-wrapper {
+    width: 210mm;   /* A4 width */
+    height: 297mm;  /* A4 height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#pdf-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#pdf-background {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('background.png'); /* your background */
+    background-size: cover;       /* full page */
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: none;                 /* ensures vibrant color */
+    z-index: 0;
+}
+
+#pdf-table-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;                  /* leave margins */
+    color: #2c2c2c;              /* high contrast text */
+}
