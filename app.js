@@ -143,9 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleStudentTabClick(event) {
         currentStudentIndex = parseInt(event.currentTarget.dataset.index);
         currentDate = new Date();
-        const clickedTab = event.currentTarget;
         selectedStudentHeader.innerHTML = '';
-        selectedStudentHeader.appendChild(clickedTab.cloneNode(true));
+        selectedStudentHeader.appendChild(event.currentTarget.cloneNode(true));
         populateMonths();
         showPage(detailsPage);
         calendarContainer.style.display = 'none';
@@ -221,39 +220,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
 
     function openAttendanceModal(dateStr) {
-    clickedDateStr = dateStr;
-    const date = new Date(dateStr + 'T00:00:00');
-    modalDateLabel.innerHTML = `${date.getDate()}<sup>${getOrdinalSuffix(date.getDate())}</sup> ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+        clickedDateStr = dateStr;
+        const date = new Date(dateStr + 'T00:00:00');
+        modalDateLabel.innerHTML = `${date.getDate()}<sup>${getOrdinalSuffix(date.getDate())}</sup> ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
 
-    dailyEntriesList.innerHTML = '';
-    const entries = students[currentStudentIndex]?.attendance?.[dateStr];
-    if (entries?.length > 0) {
-        entries.forEach((entry, index) => {
-            const entryContainer = document.createElement('div');
-            entryContainer.className = 'attendance-entry';
-            entryContainer.innerHTML = `<span><strong>${entry.hours} hours</strong> (${entry.timeRange || 'No time given'})</span>`;
+        dailyEntriesList.innerHTML = '';
+        const entries = students[currentStudentIndex]?.attendance?.[dateStr];
+        if (entries?.length > 0) {
+            entries.forEach((entry, index) => {
+                const entryContainer = document.createElement('div');
+                entryContainer.className = 'attendance-entry';
+                entryContainer.innerHTML = `<span><strong>${entry.hours} hours</strong> (${entry.timeRange || 'No time given'})</span>`;
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = "DELETE";
+                deleteBtn.className = "delete-btn";
+                deleteBtn.addEventListener('click', () => deleteEntry(dateStr, index));
+                entryContainer.appendChild(deleteBtn);
+                dailyEntriesList.appendChild(entryContainer);
+            });
+            showListViewBtn.click();
+        } else {
+            dailyEntriesList.innerHTML = '<p>No entries for this date.</p>';
+            showAddViewBtn.click();
+        }
 
-            const deleteBtn = document.createElement('button');
-            deleteBtn.textContent = "DELETE";
-            deleteBtn.className = "delete-btn";
-            deleteBtn.addEventListener('click', () => deleteEntry(dateStr, index));
-
-            entryContainer.appendChild(deleteBtn);
-            dailyEntriesList.appendChild(entryContainer);
-        });
-        showListViewBtn.click();
-    } else {
-        dailyEntriesList.innerHTML = '<p>No entries for this date.</p>';
-        showAddViewBtn.click();
+        hoursInput.value = '';
+        timeRangeInput.value = '';
+        attendanceModal.classList.add('show'); // show modal
     }
-
-    hoursInput.value = '';
-    timeRangeInput.value = '';
-
-    // ✅ Use class instead of inline display for mobile compatibility
-    attendanceModal.classList.add('show');
-}
-
 
     function deleteEntry(dateStr, entryIndex) {
         const entries = students[currentStudentIndex].attendance[dateStr];
@@ -265,10 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
         openAttendanceModal(dateStr);
     }
 
-   function closeAttendanceModal() {
-    attendanceModal.classList.remove('show');
-}
-
+    function closeAttendanceModal() {
+        attendanceModal.classList.remove('show');
+    }
 
     function handleEnterKey(event) {
         if (event.key === 'Enter') {
@@ -278,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // 7. REPORT MODAL
+    // 7. REPORT MODAL & PDF
     // =========================================================================
 
     function generateMonthlyReport() {
@@ -316,24 +309,87 @@ document.addEventListener('DOMContentLoaded', () => {
             reportTableContainer.innerHTML = tableHTML;
         }
 
-        reportModal.classList.add('show'); // ✅ show modal
+        reportModal.classList.add('show'); // show modal
     }
 
     function downloadReportAsPDF() {
-        const reportContent = document.querySelector('.report-modal-content');
-        const studentName = students[currentStudentIndex].name.replace(' ', '_');
-        const monthName = currentDate.toLocaleString('default', { month: 'long' });
-        const year = currentDate.getFullYear();
-        const fileName = `Report_${studentName}_${monthName}_${year}.pdf`;
-        const options = { margin: 0.5, filename: fileName, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
-        html2pdf().set(options).from(reportContent).save();
+    const student = students[currentStudentIndex];
+    const monthName = currentDate.toLocaleString('default', { month: 'long' });
+    const year = currentDate.getFullYear();
+    const tableHTML = reportTableContainer.innerHTML;
+
+    // Build clean printable layout
+    const pdfContent = `
+        <div style="
+            width: 210mm;
+            height: 297mm;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            background: url('background.png') no-repeat center center;
+            background-size: cover;
+            padding: 40px;
+            box-sizing: border-box;
+        ">
+            <div style="
+                width: 85%;
+                background: rgba(245, 244, 238, 0.9);
+                border-radius: 15px;
+                padding: 25px 30px;
+                text-align: center;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            ">
+                <h2 style="color:#3b2e1a; margin-bottom: 20px;">
+                    Monthly Report - ${student.name} (${monthName} ${year})
+                </h2>
+                <div style="text-align:left; font-size:14px; color:#222;">
+                    ${tableHTML}
+                </div>
+            </div>
+        </div>
+    `;
+
+    const pdfWrapper = document.getElementById('pdf-wrapper');
+    pdfWrapper.style.display = 'block';
+    pdfWrapper.innerHTML = pdfContent;
+
+    html2pdf().set({
+    margin: 0,
+    filename: `Report_${student.name}_${monthName}_${year}.pdf`,
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: {
+        scale: 4,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        scrollY: 0  // prevents hidden spacing or off-screen capture
+    },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+})
+.from(pdfWrapper)
+.toPdf()
+.get('pdf')
+.then(function (pdf) {
+    // 🩹 Remove the blank extra page if it appears
+    const totalPages = pdf.internal.getNumberOfPages();
+    if (totalPages > 1) {
+        pdf.deletePage(totalPages);
     }
+})
+.save()
+.then(() => {
+    pdfWrapper.style.display = 'none';
+});
+
+}
+
 
     // =========================================================================
     // 8. EVENT LISTENERS
     // =========================================================================
 
-        addStudentBtn.addEventListener('click', () => {
+    addStudentBtn.addEventListener('click', () => {
         const newName = prompt("Enter the new student's name:");
         if (newName && newName.trim()) {
             students.push({ name: newName.trim(), attendance: {} });
@@ -354,7 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     studentWheelContainer.addEventListener('scroll', updateWheelAnimation);
-
     backToStudentsBtn.addEventListener('click', () => showPage(studentsPage));
     selectedStudentHeader.addEventListener('click', () => showPage(studentsPage));
 
@@ -373,7 +428,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCalendar();
     });
 
-    // --- Attendance Modal ---
     showAddViewBtn.addEventListener('click', () => {
         addEntryView.classList.remove('hidden');
         viewEntriesView.classList.add('hidden');
@@ -391,22 +445,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     cancelAttendanceBtn.addEventListener('click', closeAttendanceModal);
-
-    attendanceModal.addEventListener('click', (event) => {
-        if (event.target === attendanceModal) closeAttendanceModal();
-    });
+    attendanceModal.addEventListener('click', (e) => { if(e.target===attendanceModal) closeAttendanceModal(); });
 
     saveAttendanceBtn.addEventListener('click', () => {
         const hours = hoursInput.value;
         const timeRange = timeRangeInput.value;
-        if (!hours || isNaN(hours)) {
-            alert("Please enter a valid number for hours.");
-            return;
-        }
+        if (!hours || isNaN(hours)) { alert("Enter valid hours."); return; }
         if (!students[currentStudentIndex].attendance) students[currentStudentIndex].attendance = {};
-        const studentData = students[currentStudentIndex].attendance;
-        if (!studentData[clickedDateStr]) studentData[clickedDateStr] = [];
-        studentData[clickedDateStr].push({ hours: parseFloat(hours), timeRange });
+        if (!students[currentStudentIndex].attendance[clickedDateStr]) students[currentStudentIndex].attendance[clickedDateStr] = [];
+        students[currentStudentIndex].attendance[clickedDateStr].push({ hours: parseFloat(hours), timeRange });
         saveData();
         closeAttendanceModal();
         renderCalendar();
@@ -416,7 +463,6 @@ document.addEventListener('DOMContentLoaded', () => {
     hoursInput.addEventListener('keydown', handleEnterKey);
     timeRangeInput.addEventListener('keydown', handleEnterKey);
 
-    // --- Report Modal ---
     generateReportBtn.addEventListener('click', generateMonthlyReport);
     closeReportBtn.addEventListener('click', () => reportModal.classList.remove('show'));
     reportModal.addEventListener('click', (event) => {
